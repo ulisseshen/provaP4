@@ -45,6 +45,7 @@ class UserRepository {
     $stmt = $this->pdo->prepare("INSERT INTO users (name,lastName, email, password) VALUES (?, ?, ?, ?)");
     $stmt->execute([$user->getName(), $user->getLastName(), $user->getEmail(), $user->getPassword()]);
     $user->setId($this->pdo->lastInsertId());
+    return new SaveResult(true, "Usuário cadastrado com sucesso", 201);
   }
 
   public function getUsers() {
