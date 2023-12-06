@@ -5,18 +5,21 @@
 
   $db = new Database();
   $userRepository = new UserRepository($db);
+
+    // Verifica se o formulário de edição foi submetido
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      // Obtém os dados do formulário
+      $id = $_POST['id'];
+      $nome = $_POST['nome'];
+      $sobrenome = $_POST['sobrenome'];
+  
+      // atualiza o usuário
+      $userRepository->updateUser($id, $nome, $sobrenome);
+    }
+    
   $usuarios = $userRepository->getUsers();
 
-  // Verifica se o formulário de edição foi submetido
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtém os dados do formulário
-    $id = $_POST['id'];
-    $nome = $_POST['nome'];
-    $sobrenome = $_POST['sobrenome'];
 
-    // atualiza o usuário
-    $userRepository->updateUser($id, $nome, $sobrenome);
-  }
 ?>
 
 <!DOCTYPE html>
