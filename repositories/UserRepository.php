@@ -9,8 +9,10 @@ class UserRepository {
       id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(30) NOT NULL,
       lastName VARCHAR(30) NOT NULL,
-      email VARCHAR(50) NOT NULL,
+      email VARCHAR(50) NOT NULL UNIQUE,
       password VARCHAR(50) NOT NULL
+
+
     )");
   }
 
@@ -31,7 +33,7 @@ class UserRepository {
     if (!$row) {
       return null;
     }
-    return new User($row['id'], $row['name'], $row['email'], $row['password']);
+    return new User($row['id'], $row['name'], $row['lastName'], $row['email'], $row['password']);
   }
 
   public function saveNew(User $user) {
@@ -43,6 +45,27 @@ class UserRepository {
     $stmt = $this->pdo->prepare("INSERT INTO users (name,lastName, email, password) VALUES (?, ?, ?, ?)");
     $stmt->execute([$user->getName(), $user->getLastName(), $user->getEmail(), $user->getPassword()]);
     $user->setId($this->pdo->lastInsertId());
+  }
+
+  public function getUsers() {
+    $stmt = $this->pdo->prepare("SELECT * FROM users");
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $users = [];
+    foreach ($rows as $row) {
+      $users[] = new User($row['id'], $row['name'], $row['lastName'], $row['email'], $row['password']);
+    }
+    return $users;
+  }
+
+  public function updateUser($id, $name, $lastName) {
+    $stmt = $this->pdo->prepare("UPDATE users SET name = ?, lastName = ? WHERE id = ?");
+    $stmt->execute([$name, $lastName, $id]);
+  }
+
+  public function deleteUser($id) {
+    $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = ?");
+    $stmt->execute([$id]);
   }
 
 

@@ -7,12 +7,12 @@
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $user = new User($name, $lastName, $email, $password);
+    $user = new User(null, $name, $lastName, $email, $password);
     $db = new Database();
     $userRepository = new UserRepository($db);
     $result = $userRepository->saveNew($user);
     if ($result->isSuccess()) {
-        header("Location: /login.php");
+        header("Location: ./");
     } else {
         //retornar status code 
         http_response_code($result->getStatus());
